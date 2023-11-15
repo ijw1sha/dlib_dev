@@ -20,7 +20,7 @@ class VideoProcessor:
     # This below method will draw all those points which are from 0 to 67 on face one by one.
     
     def drawPoints(image, faceLandmarks, startpoint, endpoint, isClosed=False):
-    points = []
+        points = []
     for i in range(startpoint, endpoint+1):
         point = [faceLandmarks.part(i).x, faceLandmarks.part(i).y]
         points.append(point)
