@@ -54,7 +54,7 @@ class VideoProcessor:
             drawPoints(img, s_, 42, 47, True)    # Right Eye
             drawPoints(img, s_, 48, 59, True)    # Outer lip
             drawPoints(img, s_, 60, 67, True)    # Inner lip
-        	for(i, y) in s:
+         for(i, y) in s:
         		cv2.circle(img, (i,y), 2, (0, 255, 0), -1) 
 
         return av.VideoFrame.from_ndarray(img, format="bgr24")
