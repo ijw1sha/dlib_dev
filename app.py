@@ -1,11 +1,5 @@
 import streamlit as st
-import asyncio
-from streamlit_webrtc import (
-    RTCConfiguration,
-    VideoProcessorBase,
-    WebRtcMode,
-    webrtc_streamer,
-)
+from streamlit_webrtc import RTCConfiguration, VideoProcessorBase, WebRtcMode, webrtc_streamer
 import av
 from imutils import face_utils
 import dlib
@@ -60,6 +54,8 @@ class VideoProcessor(VideoProcessorBase):
                 for (i, y) in s:
                     cv2.circle(img, (i, y), 2, (0, 255, 0), -1)
 
+        st.image(img, channels="BGR", use_column_width=True)
+
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
 
@@ -67,16 +63,11 @@ RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
 
-# Run Streamlit app in a separate thread
-loop = asyncio.get_event_loop()
-loop.create_task(st.experimental_streamlit_runner.run(runner, "app.py"))
-
-# Create WebRTC streamer
 webrtc_streamer(
     key="dlib",
     mode=WebRtcMode.SENDRECV,
     rtc_configuration=RTC_CONFIGURATION,
     video_processor_factory=VideoProcessor,
     media_stream_constraints={"video": True, "audio": False},
-    async_processing=True,
+    async_processing=False,
 )
