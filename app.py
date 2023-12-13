@@ -22,7 +22,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(p)
 
 
-class VideoProcessor(VideoTransformerBase):
+class VideoProcessor(VideoProcessorBase):
     @staticmethod
     def draw_points(image, face_landmarks, start_point, end_point, is_closed=False):
         points = []
@@ -35,7 +35,7 @@ class VideoProcessor(VideoTransformerBase):
             image, [points], is_closed, (255, 200, 0), thickness=2, lineType=cv2.LINE_8
         )
 
-    def transform(self, frame):
+    def recv(self, frame):
         img = frame.to_ndarray(format="bgr24")
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -72,7 +72,7 @@ webrtc_streamer(
     key="dlib",
     mode=WebRtcMode.SENDRECV,
     rtc_configuration=RTC_CONFIGURATION,
-    video_transformer_factory=VideoProcessor,
+    video_processor_factory=VideoProcessor,
     media_stream_constraints={"video": True, "audio": False},
     async_processing=True,
 )
