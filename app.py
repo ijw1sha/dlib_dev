@@ -1,9 +1,8 @@
 import streamlit as st
+import asyncio
 from streamlit_webrtc import (
-    ClientSettings,
-    VideoTransformerBase,
-    VideoProcessorBase,
     RTCConfiguration,
+    VideoProcessorBase,
     WebRtcMode,
     webrtc_streamer,
 )
@@ -43,36 +42,3 @@ class VideoProcessor(VideoProcessorBase):
         rects = detector(gray, 0)
 
         for (i, rect) in enumerate(rects):
-            s = predictor(gray, rect)
-            s = face_utils.shape_to_np(s)
-
-            if i == 0:
-                print("Total number of face landmarks detected ", len(s))
-
-                self.draw_points(img, s, 0, 16)  # Jaw line
-                self.draw_points(img, s, 17, 21)  # Left eyebrow
-                self.draw_points(img, s, 22, 26)  # Right eyebrow
-                self.draw_points(img, s, 27, 30)  # Nose bridge
-                self.draw_points(img, s, 30, 35, True)  # Lower nose
-                self.draw_points(img, s, 36, 41, True)  # Left eye
-                self.draw_points(img, s, 42, 47, True)  # Right Eye
-                self.draw_points(img, s, 48, 59, True)  # Outer lip
-                self.draw_points(img, s, 60, 67, True)  # Inner lip
-                for (i, y) in s:
-                    cv2.circle(img, (i, y), 2, (0, 255, 0), -1)
-
-        return av.VideoFrame.from_ndarray(img, format="bgr24")
-
-
-RTC_CONFIGURATION = RTCConfiguration(
-    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-)
-
-webrtc_streamer(
-    key="dlib",
-    mode=WebRtcMode.SENDRECV,
-    rtc_configuration=RTC_CONFIGURATION,
-    video_processor_factory=VideoProcessor,
-    media_stream_constraints={"video": True, "audio": False},
-    async_processing=True,
-)
